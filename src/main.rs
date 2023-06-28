@@ -5,6 +5,7 @@ mod renderer;
 
 fn main() -> Result<(), String> {
     let sdl_context = sdl2::init()?;
+    let ttf_context = sdl2::ttf::init().map_err(|e| e.to_string())?;
     let mut renderer = Renderer::new(sdl_context.video()?)?;
 
     'running: loop {
