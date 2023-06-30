@@ -1,3 +1,4 @@
+use std::path::Path;
 use std::time::Duration;
 
 use sdl2::VideoSubsystem;
@@ -6,7 +7,7 @@ use sdl2::rect::Rect;
 use sdl2::render::Canvas;
 use sdl2::video::Window;
 
-const FONT_PATH: &str = "../assets/font.ttf"; // TODO: Inject
+const FONT_PATH: &str = "assets/font.ttf"; // TODO: Inject
 
 pub struct Renderer {
     canvas: Canvas<Window>
@@ -15,7 +16,7 @@ pub struct Renderer {
 impl Renderer {
     pub fn new(video_subsystem: VideoSubsystem) -> Result<Renderer, String> {
         let window = video_subsystem
-            .window("Foo", 800, 600)
+            .window("foo", 800, 600)
             .position_centered()
             .build()
             .map_err(|e| e.to_string())?;
@@ -37,7 +38,7 @@ impl Renderer {
     fn render(&mut self) -> Result<(), String> {
         let ttf_context = sdl2::ttf::init().map_err(|e| e.to_string())?;
         let texture_creator = self.canvas.texture_creator();
-        let font = ttf_context.load_font(FONT_PATH, 128)?;
+        let font = ttf_context.load_font(Path::new(FONT_PATH), 128)?;
 
         let surface = font
             .render(self.canvas.window().title())
@@ -50,9 +51,10 @@ impl Renderer {
 
         ::std::thread::sleep(Duration::new(0, 1_000_000_000u32 / 30));
         
-        self.canvas.set_draw_color(Color::WHITE);
+        self.canvas.set_draw_color(Color::BLACK);
         self.canvas.clear();
 
+        self.canvas.set_draw_color(Color::WHITE);
         let target = Rect::new(400, 300, 32, 32);
         self.canvas.copy(&texture, None, Some(target))?;
 
