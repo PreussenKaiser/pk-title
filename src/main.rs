@@ -1,22 +1,11 @@
-use renderer::Renderer;
-use sdl2::event::Event;
+use game::{Game, size::Size};
 
-mod renderer;
+mod game;
 
 fn main() -> Result<(), String> {
-    let sdl_context = sdl2::init()?;
-    let mut renderer = Renderer::new(sdl_context.video()?)?;
+    let game = Game::new("Foo", Size::new(800, 600), 60);
 
-    'running: loop {
-        for event in sdl_context.event_pump()?.poll_iter() {
-            match event {
-                Event::Quit { .. } => break 'running,
-                _ => {}
-            }
-        }
-
-        renderer.draw()?;
-    }
+    game.run()?;
 
     Ok(())
 }
