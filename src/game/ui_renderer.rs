@@ -1,9 +1,11 @@
-use self::{cache::WidgetCache, widget::Widget, widget_base::WidgetBase};
+use sdl2::{render::Canvas, video::Window, pixels::Color};
+
+use self::{cache::WidgetCache, widget_base::WidgetBase};
 
 mod cache;
-mod text_widget;
+pub mod text_widget;
 mod widget;
-mod widget_base;
+pub mod widget_base;
 
 pub struct UIRenderer {
     widgets: WidgetCache,
@@ -18,11 +20,22 @@ impl UIRenderer {
          }
     }
 
-    pub fn add_widget(mut self, widget: WidgetBase) {
+    pub fn add_widget(&mut self, widget: WidgetBase) {
         self.widgets.add(widget);
     }
 
     pub fn stop(mut self) {
         self.running = false;
+    }
+
+    pub fn render(&mut self, canvas: &mut Canvas<Window>) -> Result<(), String> {
+        canvas.set_draw_color(Color::BLACK);
+        canvas.clear();
+
+        canvas.set_draw_color(Color::WHITE);
+        self.widgets.draw(canvas)?;
+        canvas.present();
+
+        Ok(())
     }
 }

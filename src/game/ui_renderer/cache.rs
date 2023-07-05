@@ -15,11 +15,11 @@ impl WidgetCache {
         }
     }
 
-    pub fn add(mut self, widget: WidgetBase) {
+    pub fn add(&mut self, widget: WidgetBase) {
         self.cache.push(widget);
     }
 
-    pub fn draw(self, canvas: &Canvas<Window>) -> Result<(), String> {
+    pub fn draw(&self, canvas: &mut Canvas<Window>) -> Result<(), String> {
         let size = self.cache.len();
 
         for i in 0..size {

@@ -1,6 +1,10 @@
-use sdl2::{rect::Point, render::Canvas, video::Window};
+use std::path::Path;
+
+use sdl2::{rect::{Point, Rect}, render::Canvas, video::Window, pixels::Color};
 
 use super::widget::Widget;
+
+const FONT_PATH: &str = "assets/font.ttf";
 
 pub struct TextWidget {
     text: String,
@@ -19,7 +23,30 @@ impl TextWidget {
 }
 
 impl Widget for TextWidget {
-    fn draw(&self, canvas: &Canvas<Window>) -> Result<(), String> {
-        todo!()
+    fn draw(&self, canvas: &mut Canvas<Window>) -> Result<(), String> {
+        let ttf_context = sdl2::ttf::init().map_err(|e| e.to_string())?;
+        let texture_creator = canvas.texture_creator();
+        let font = ttf_context.load_font(Path::new(FONT_PATH), 128)?;
+
+        let surface = font
+            .render(self.text.as_str())
+            .blended(Color::WHITE)
+            .map_err(|e| e.to_string())?;
+
+        let texture = texture_creator
+            .create_texture_from_surface(&surface)
+            .map_err(|e| e.to_string())?;
+
+        let size = self.size as u32;
+        let target = Rect::new(
+            self.pos.x(),
+            self.pos.y(),
+            size * 2,
+            size
+        );
+
+        canvas.copy(&texture, None, Some(target))?;
+
+        Ok(())
     }
 }

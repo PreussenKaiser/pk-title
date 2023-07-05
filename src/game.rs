@@ -1,6 +1,8 @@
-use sdl2::{Sdl, video::Window, event::Event};
+use sdl2::{Sdl, video::Window, event::Event, rect::Point};
 
-use self::{size::Size, ui_renderer::UIRenderer};
+use crate::game::ui_renderer::text_widget::TextWidget;
+
+use self::{size::Size, ui_renderer::{UIRenderer, widget_base::WidgetBase}};
 
 pub mod size;
 mod ui_renderer;
@@ -48,8 +50,13 @@ impl Game {
     }
 
     fn render_title(self, sdl_context: &Sdl, window: Window) -> Result<(), String> {
-        let mut renderer = UIRenderer::new();
+        let mut renderer = self.build_title();
         let mut event_pump = sdl_context.event_pump()?;
+
+        let mut canvas = window
+            .into_canvas()
+            .build()
+            .map_err(|e| e.to_string())?;
 
         'ui: loop {
             for event in event_pump.poll_iter() {
@@ -58,8 +65,23 @@ impl Game {
                     _ => {}
                 }
             }
+
+            renderer.render(&mut canvas)?;
         }
 
         Ok(())
+    }
+
+    fn build_title(self) -> UIRenderer {
+        let title_widget = TextWidget::new(
+            self.title.as_str(),
+            Point::new(64, 64),
+            128
+        );
+
+        let mut renderer = UIRenderer::new();
+        renderer.add_widget(WidgetBase::Text(title_widget));
+
+        renderer
     }
 }
