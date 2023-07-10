@@ -1,35 +1,47 @@
 use sdl2::{render::Canvas, video::Window};
 
-use super::{widget::Widget, widget_base::WidgetBase};
+use super::widget::Widget;
 
 pub struct WidgetCache {
-    cache: Vec<WidgetBase>,
-    current: u32
+    cache: Vec<Box<dyn Widget>>,
+    selected: u8 // 255 is enough for now.
 }
 
 impl WidgetCache {
     pub fn new() -> Self {
-        Self {
+        return Self {
             cache: Vec::new(),
-            current: 0
-        }
+            selected: 0
+        };
     }
 
-    pub fn add(&mut self, widget: WidgetBase) {
-        self.cache.push(widget);
+    pub fn selected(self) -> u8 { return self.selected; }
+
+    pub fn select(&mut self, index: u8) -> Option<&Box<dyn Widget>> {
+        let widget = self.cache.get(index as usize);
+
+        if widget.is_some() {
+            self.selected = index;
+
+            let unwrapped = widget.unwrap();
+        }
+
+        return widget;
+    }
+
+    pub fn add<T: Widget + 'static>(&mut self, widget: T) {
+        self.cache.push(Box::new(widget));
     }
 
     pub fn draw(&self, canvas: &mut Canvas<Window>) -> Result<(), String> {
         let size = self.cache.len();
 
         for i in 0..size {
-            match &self.cache[i] {
-                WidgetBase::Text(widget) => {
-                    widget.draw(canvas)?;
-                }
-            }
+            let widget = &self.cache[i];
+
+            widget.draw(canvas)?;
         }
 
-        Ok(())
+        return Ok(());
     }
 }

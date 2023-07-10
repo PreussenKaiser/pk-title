@@ -14,11 +14,11 @@ pub struct TextWidget {
 
 impl TextWidget {
     pub fn new(text: &str, pos: Point, size: u8) -> Self {
-        Self {
+        return Self {
             text: text.to_string(),
             pos,
             size
-        }
+        };
     }
 }
 
@@ -47,6 +47,14 @@ impl Widget for TextWidget {
 
         canvas.copy(&texture, None, Some(target))?;
 
-        Ok(())
+        return Ok(());
+    }
+
+    fn pos(&self) -> Point {
+        return self.pos;
+    }
+
+    fn size(&self) -> u8 {
+        return self.size;
     }
 }

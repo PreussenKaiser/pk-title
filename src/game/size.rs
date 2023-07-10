@@ -5,9 +5,9 @@ pub struct Size {
 
 impl Size {
     pub fn new(w: u32, h: u32) -> Self {
-        Self { w, h }
+        return Self { w, h };
     }
 
-    pub fn w(&self) -> u32 { self.w }
-    pub fn h(&self) -> u32 { self.h }
+    pub fn w(&self) -> u32 { return self.w }
+    pub fn h(&self) -> u32 { return self.h }
 }

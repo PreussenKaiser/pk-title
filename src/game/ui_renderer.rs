@@ -1,31 +1,33 @@
 use sdl2::{render::Canvas, video::Window, pixels::Color};
 
-use self::{cache::WidgetCache, widget_base::WidgetBase};
+use self::{cache::WidgetCache, widget::Widget};
 
+pub mod button_widget;
 mod cache;
 pub mod text_widget;
 mod widget;
-pub mod widget_base;
 
 pub struct UIRenderer {
-    widgets: WidgetCache,
-    running: bool
+    widgets: WidgetCache
 }
 
 impl UIRenderer {
     pub fn new() -> Self {
-        Self {
-            widgets: WidgetCache::new(),
-            running: true
-         }
+        return Self { widgets: WidgetCache::new() };
     }
 
-    pub fn add_widget(&mut self, widget: WidgetBase) {
+    pub fn add_widget<T: Widget + 'static>(&mut self, widget: T) -> &mut Self {
         self.widgets.add(widget);
+
+        return self;
     }
 
-    pub fn stop(mut self) {
-        self.running = false;
+    pub fn nav_up(mut self) {
+        self.widgets.select(1);
+    }
+
+    pub fn nav_down(mut self) {
+        self.widgets.select(2);
     }
 
     pub fn render(&mut self, canvas: &mut Canvas<Window>) -> Result<(), String> {
