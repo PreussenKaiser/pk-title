@@ -22,11 +22,11 @@ impl UIRenderer {
         return self;
     }
 
-    pub fn nav_up(mut self) {
+    pub fn nav_up(&mut self) {        
         self.widgets.select(1);
     }
 
-    pub fn nav_down(mut self) {
+    pub fn nav_down(&mut self) {
         self.widgets.select(2);
     }
 

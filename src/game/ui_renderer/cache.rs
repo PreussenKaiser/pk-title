@@ -15,18 +15,14 @@ impl WidgetCache {
         };
     }
 
-    pub fn selected(self) -> u8 { return self.selected; }
+    pub fn select(&mut self, index: u8) {
+        let old_widget = &mut self.cache[self.selected as usize];
+        old_widget.unselect();
 
-    pub fn select(&mut self, index: u8) -> Option<&Box<dyn Widget>> {
-        let widget = self.cache.get(index as usize);
+        self.selected = index;
 
-        if widget.is_some() {
-            self.selected = index;
-
-            let unwrapped = widget.unwrap();
-        }
-
-        return widget;
+        let new_widget = &mut self.cache[self.selected as usize];
+        new_widget.select();
     }
 
     pub fn add<T: Widget + 'static>(&mut self, widget: T) {

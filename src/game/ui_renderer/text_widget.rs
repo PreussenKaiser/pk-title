@@ -57,4 +57,8 @@ impl Widget for TextWidget {
     fn size(&self) -> u8 {
         return self.size;
     }
+
+    fn handle_event(&self) {}
+    fn select(&mut self) {}
+    fn unselect(&mut self) {}
 }

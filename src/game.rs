@@ -1,4 +1,4 @@
-use sdl2::{Sdl, video::Window, event::Event, rect::Point};
+use sdl2::{Sdl, video::Window, event::Event, rect::Point, keyboard::Keycode};
 
 use crate::game::ui_renderer::text_widget::TextWidget;
 
@@ -54,13 +54,21 @@ impl Game {
             .map_err(|e| e.to_string())?;
 
         'ui: loop {
-            for event in event_pump.poll_iter() {
+            for event in event_pump.poll_iter() {  
                 match event {
+                    Event::KeyDown { keycode: Some(keycode), .. } => {
+                        match keycode {
+                            Keycode::Up => { renderer.nav_up(); },
+                            Keycode::Down => { renderer.nav_down(); },
+                            Keycode::Escape => { break 'ui }
+                            _ => {}
+                        }
+                    }
                     Event::Quit { .. } => { break 'ui }
                     _ => {}
                 }
             }
-
+            
             renderer.render(&mut canvas)?;
         }
 

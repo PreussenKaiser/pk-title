@@ -4,10 +4,7 @@ pub trait Widget {
     fn draw(&self, canvas: &mut Canvas<Window>) -> Result<(), String>;
     fn pos(&self) -> Point;
     fn size(&self) -> u8;
-}
-
-pub trait SelectableWidget: Widget {
-    fn handle_event(self);
+    fn handle_event(&self);
     fn select(&mut self);
     fn unselect(&mut self);
 }
